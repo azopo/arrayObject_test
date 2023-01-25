@@ -31,7 +31,7 @@
         </button>
       </p>
     </div>
-    <p>{{ result }}</p>
+    <pre><code class="w-[500px]">{{ result }}</code></pre>
   </div>
 </template>
 
@@ -88,7 +88,7 @@ function flattenObject(obj, parentKey = "", flattenedObject = {}) {
       flattenedObject[`${parentKey}${key}`] = obj[key];
     }
   }
-  result.value = JSON.stringify(flattenedObject);
+  result.value = JSON.stringify(flattenedObject, undefined, 2);
 }
 </script>
 
