@@ -38,7 +38,7 @@ const arr = [
   -2, 0, 1, 2, 3, 4, 5, 8, 9, 11, 13, 15, 18, 22, 25, 28, 29, 30, 31,
 ];
 const inputModel = ref(arr);
-const result = ref("123123123");
+const result = ref("");
 const rangeString = () => {
   const arr = inputModel.value.toString().split(/,| /);
   if (result.value.length > 0) {
