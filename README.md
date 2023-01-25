@@ -1,4 +1,4 @@
-# learningJourney_test
+# arrayObject_test
 
 ## Screenshots
 ![array](https://user-images.githubusercontent.com/79973252/214564846-e9071db8-5c77-42ba-8fec-702ca0d5a10c.png)
