@@ -39,25 +39,36 @@ const arr = [
 ];
 const inputModel = ref(arr);
 const result = ref("");
+// function to convert a string of numbers separated by commas or spaces into a range string
 const rangeString = () => {
+  // split the input string into an array of numbers
   const arr = inputModel.value.toString().split(/,| /);
+  // clear the result value if it has any previous value
   if (result.value.length > 0) {
     result.value = "";
   }
+  // initialize the start and end values to the first element of the array
   let start = arr[0];
   let end = arr[0];
 
+  // loop through the rest of the array
   for (let i = 1; i < arr.length; i++) {
+    // if the current number is one more than the previous number
     if (arr[i] - arr[i - 1] === 1) {
+      // update the end value
       end = arr[i];
     } else {
+      // if the start and end values are the same, add the start value to the result
       result.value += start === end ? start : start + "-" + end;
+      // add a comma and space to the result
       result.value += ", ";
+      // update the start and end values to the current number
       start = arr[i];
       end = arr[i];
     }
   }
 
+  // add the final range or single value to the result
   result.value += start === end ? start : start + "-" + end;
 };
 </script>

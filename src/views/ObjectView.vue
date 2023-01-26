@@ -80,35 +80,25 @@ const multidimensionalObject = ref({
   ],
 });
 const textArea = ref(JSON.stringify(multidimensionalObject.value));
-
-// function flattenObject(obj, parentKey = "", flattenedObject = {}) {
-//   for (const key in obj) {
-//     if (typeof obj[key] === "object") {
-//       if (Array.isArray(obj[key])) {
-//         flattenedObject[`${parentKey}${key}`] = obj[key];
-//       } else {
-//         flattenObject(obj[key], `${parentKey}${key}`, flattenedObject);
-//       }
-//     } else {
-//       flattenedObject[`${parentKey}${key}`] = obj[key];
-//     }
-//   }
-//   result.value = JSON.stringify(flattenedObject, undefined, 2);
-//   console.log(result.value);
-// }
 function flattenObject(obj, parentKeys = []) {
-  let result = {};
+  let result = {}; //declare an empty object to store the final result
+
+  //iterate through the keys in the object
   for (const key in obj) {
-    const value = obj[key];
-    const newKeys = parentKeys.concat(key);
+    const value = obj[key]; //get the value of the current key
+    const newKeys = parentKeys.concat(key); //create a new array of keys including the current key and the parent keys
+
+    /* check if the current value is an array and if it contains only primitives, if so add it to the final result object as it is, without flattening it*/
     if (
       Array.isArray(value) &&
       value.every((item) => typeof item !== "object")
     ) {
       result[newKeys.join("")] = value;
     } else if (typeof value === "object" && value !== null) {
+      /* if the current value is an object, recursively call the function with the current key appended to the parent keys*/
       result = { ...result, ...flattenObject(value, newKeys) };
     } else {
+      /* if the current value is not an object, add it to the final result object with the parent keys concatenated to the current key as the key name */
       result[newKeys.join("")] = value;
     }
   }
