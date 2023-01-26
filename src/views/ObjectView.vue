@@ -24,19 +24,23 @@
       </div>
       <p>
         <button
-          class="bg-white text-black rounded px-2 py-1 mt-1"
-          @click.prevent="flattenObject(JSON.parse(textArea))"
+          class="bg-white text-black rounded px-2 py-1 mt-5"
+          @click.prevent="flatObject"
         >
           Перетворити у плоский формат
         </button>
       </p>
     </div>
-    <pre><code class="w-[500px]">{{ result }}</code></pre>
+    <div v-if="result">
+      <p class="text-red-400 mb-10">Результат також у консолі</p>
+      <pre><code class="w-[500px]" >{{ result }}</code></pre>
+    </div>
   </div>
 </template>
 
 <script setup>
 import { ref } from "vue";
+
 const result = ref("");
 const multidimensionalObject = ref({
   User: 1,
@@ -76,20 +80,45 @@ const multidimensionalObject = ref({
   ],
 });
 const textArea = ref(JSON.stringify(multidimensionalObject.value));
-function flattenObject(obj, parentKey = "", flattenedObject = {}) {
+
+// function flattenObject(obj, parentKey = "", flattenedObject = {}) {
+//   for (const key in obj) {
+//     if (typeof obj[key] === "object") {
+//       if (Array.isArray(obj[key])) {
+//         flattenedObject[`${parentKey}${key}`] = obj[key];
+//       } else {
+//         flattenObject(obj[key], `${parentKey}${key}`, flattenedObject);
+//       }
+//     } else {
+//       flattenedObject[`${parentKey}${key}`] = obj[key];
+//     }
+//   }
+//   result.value = JSON.stringify(flattenedObject, undefined, 2);
+//   console.log(result.value);
+// }
+function flattenObject(obj, parentKeys = []) {
+  let result = {};
   for (const key in obj) {
-    if (typeof obj[key] === "object") {
-      if (Array.isArray(obj[key])) {
-        flattenedObject[`${parentKey}${key}`] = obj[key];
-      } else {
-        flattenObject(obj[key], `${parentKey}${key}.`, flattenedObject);
-      }
+    const value = obj[key];
+    const newKeys = parentKeys.concat(key);
+    if (
+      Array.isArray(value) &&
+      value.every((item) => typeof item !== "object")
+    ) {
+      result[newKeys.join("")] = value;
+    } else if (typeof value === "object" && value !== null) {
+      result = { ...result, ...flattenObject(value, newKeys) };
     } else {
-      flattenedObject[`${parentKey}${key}`] = obj[key];
+      result[newKeys.join("")] = value;
     }
   }
-  result.value = JSON.stringify(flattenedObject, undefined, 2);
+  return result;
 }
+
+const flatObject = () => {
+  result.value = flattenObject(JSON.parse(textArea.value));
+  console.log(result.value);
+};
 </script>
 
 <style scoped></style>
